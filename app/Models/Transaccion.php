@@ -3,20 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Categoria extends Model
+class Transaccion extends Model
 {
-    protected $table = 'categorias';
+    // Se indica el nombre porque Laravel adivinaría "transaccions".
+    protected $table = 'transacciones';
 
     protected $fillable = [
-        'nombre',
+        'cuenta_id',
+        'categoria_id',
         'tipo',
+        'monto',
+        'fecha',
         'descripcion',
+        'creado_por',
     ];
 
-    public function transacciones(): HasMany
+    protected function casts(): array
     {
-        return $this->hasMany(Transaccion::class, 'categoria_id');
+        return [
+            'monto' => 'decimal:2',
+            'fecha' => 'date',
+        ];
     }
+
+    
+public function cuenta(): BelongsTo{
+ return $this->belongsTo(Cuenta::class, 'cuenta_id');}
+
+ 
+public function categoria(): BelongsTo{
+ return $this->belongsTo(Categoria::class, 'categoria_id');}
 }
